@@ -4,8 +4,7 @@ export async function gamesCreate(_, res) {
   const { name, image, stockTotal, pricePerDay } = res.locals;
   try {
     await connection.query(
-      `INSERT INTO games (name, image, stockTotal, pricePerDay) 
-         VALUES ($1, $2, $3, $4);`,
+      'INSERT INTO games (name, image, "stockTotal", "pricePerDay") VALUES ($1, $2, $3, $4)',
       [name, image, stockTotal, pricePerDay]
     );
     res.send(201);
