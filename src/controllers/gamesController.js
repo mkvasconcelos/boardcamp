@@ -16,8 +16,10 @@ export async function gamesCreate(_, res) {
 }
 
 export async function gamesRead(_, res) {
-  const result = await connection.query(`SELECT * FROM games;`);
-  //   console.log(result.rows);
-  console.log(result);
-  res.send(result.rows[0]);
+  try {
+    const result = await connection.query(`SELECT * FROM games;`);
+    return res.status(200).send(result.rows);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
 }
