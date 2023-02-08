@@ -3,7 +3,7 @@ import connection from "../database/database.js";
 export async function customersCreate(_, res) {
   const { name, phone, cpf, birthday } = res.locals;
   try {
-    const result = await connection.query(
+    await connection.query(
       `INSERT INTO customers (name, phone, cpf, birthday) 
          VALUES ($1, $2, $3, $4);`,
       [name, phone, cpf, birthday]
@@ -52,7 +52,7 @@ export async function customersReadId(req, res) {
     if (result.rows.length === 0) {
       return res.sendStatus(404);
     }
-    return res.status(200).send(result.rows);
+    return res.status(200).send(result.rows[0]);
   } catch (err) {
     return res.status(500).send(err);
   }

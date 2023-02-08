@@ -3,12 +3,11 @@ import connection from "../database/database.js";
 export async function gamesCreate(_, res) {
   const { name, image, stockTotal, pricePerDay } = res.locals;
   try {
-    const result = await connection.query(
+    await connection.query(
       `INSERT INTO games (name, image, stockTotal, pricePerDay) 
-         VALUES ($2, $3, $4, $5);`,
+         VALUES ($1, $2, $3, $4);`,
       [name, image, stockTotal, pricePerDay]
     );
-    console.log(result);
     res.send(201);
   } catch (err) {
     res.status(500).send(err);

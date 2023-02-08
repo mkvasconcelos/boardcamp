@@ -1,4 +1,5 @@
 import { customersSchema } from "../schemas/customersSchema.js";
+import { gamesSchema } from "../schemas/gamesSchema.js";
 
 export async function gamesValidation(req, res, next) {
   const { name, image, stockTotal, pricePerDay } = req.body;
