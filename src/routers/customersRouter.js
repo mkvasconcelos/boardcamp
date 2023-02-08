@@ -3,6 +3,7 @@ import {
   customersCreate,
   customersRead,
   customersReadId,
+  customersUpdate,
 } from "../controllers/customersController.js";
 import { customersDocumentValidation } from "../middleware/customersMiddleware.js";
 import { customersValidation } from "../middleware/schemaMiddleware.js";
@@ -13,6 +14,12 @@ customersRouter.post(
   customersValidation,
   customersDocumentValidation,
   customersCreate
+);
+customersRouter.put(
+  "/customers/:id",
+  customersValidation,
+  customersDocumentValidation,
+  customersUpdate
 );
 customersRouter.get("/customers", customersRead);
 customersRouter.get("/customers/:id", customersReadId);

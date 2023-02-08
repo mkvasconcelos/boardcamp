@@ -22,6 +22,7 @@ export async function gamesValidation(req, res, next) {
 
 export async function customersValidation(req, res, next) {
   const { name, phone, cpf, birthday } = req.body;
+  const { id } = req.params;
   const { error } = customersSchema.validate({
     name,
     phone,
@@ -35,5 +36,6 @@ export async function customersValidation(req, res, next) {
   res.locals.phone = phone;
   res.locals.cpf = cpf;
   res.locals.birthday = birthday;
+  res.locals.id = id;
   next();
 }
