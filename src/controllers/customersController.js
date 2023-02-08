@@ -43,15 +43,12 @@ export async function customersRead(_, res) {
   }
 }
 
-export async function customersReadId(req, res) {
-  const { id } = req.params;
+export async function customersReadId(_, res) {
+  const { id } = res.locals;
   try {
     const result = await connection.query(
       `SELECT * FROM customers WHERE id = ${id};`
     );
-    if (result.rows.length === 0) {
-      return res.sendStatus(404);
-    }
     return res.status(200).send(result.rows[0]);
   } catch (err) {
     return res.status(500).send(err);
