@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 export async function rentalsRead(_, res) {
   try {
     const result = await connection.query(
-      `SELECT rentals.*, games.name AS gname, customers.name AS cname 
+      `SELECT rentals.*, games.name AS "gameName", customers.name AS "customerName" 
       FROM rentals 
       INNER JOIN games ON games.id = rentals."gameId"
       INNER JOIN customers ON customers.id = rentals."customerId";`
@@ -22,11 +22,11 @@ export async function rentalsRead(_, res) {
         delayFee: result.rows[i].delayFee,
         customer: {
           id: result.rows[i].customerId,
-          name: result.rows[i].cname,
+          name: result.rows[i].customerName,
         },
         game: {
           id: result.rows[i].gameId,
-          name: result.rows[i].gname,
+          name: result.rows[i].gameName,
         },
       });
     }
@@ -51,7 +51,7 @@ export async function rentalsCreate(_, res) {
         null,
       ]
     );
-    return res.send(201);
+    return res.sendStatus(201);
   } catch (err) {
     return res.status(500).send(err);
   }

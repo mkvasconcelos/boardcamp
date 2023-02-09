@@ -31,3 +31,18 @@ export async function gamesIdValidation(_, res, next) {
     return res.status(500).send(err);
   }
 }
+
+export async function gamesStockValidation(_, res, next) {
+  const { gameId, game } = res.locals;
+  try {
+    const gamesRented = await connection.query(
+      `SELECT COUNT(*) FROM rentals WHERE "gameId" = ${gameId} AND "returnDate" IS NULL;`
+    );
+    if (Number(gamesRented.rows[0].count) === game.stockTotal) {
+      return res.sendStatus(404);
+    }
+    next();
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+}

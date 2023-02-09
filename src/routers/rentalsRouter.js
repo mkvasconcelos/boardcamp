@@ -4,7 +4,10 @@ import {
   rentalsRead,
 } from "../controllers/rentalsController.js";
 import { customersIdValidation } from "../middleware/customersMiddleware.js";
-import { gamesIdValidation } from "../middleware/gamesMiddleware.js";
+import {
+  gamesIdValidation,
+  gamesStockValidation,
+} from "../middleware/gamesMiddleware.js";
 import { rentalsValidation } from "../middleware/schemaMiddleware.js";
 
 const rentalsRouter = Router();
@@ -13,6 +16,7 @@ rentalsRouter.post(
   "/rentals",
   rentalsValidation,
   gamesIdValidation,
+  gamesStockValidation,
   customersIdValidation,
   rentalsCreate
 );
