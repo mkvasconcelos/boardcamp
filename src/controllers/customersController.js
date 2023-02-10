@@ -34,9 +34,14 @@ export async function customersUpdate(req, res) {
   }
 }
 
-export async function customersRead(_, res) {
+export async function customersRead(req, res) {
+  const { cpf } = req.query;
   try {
-    const result = await connection.query(`SELECT * FROM customers;`);
+    let query = `SELECT * FROM customers;`;
+    if (cpf) {
+      query = `SELECT * FROM customers WHERE cpf LIKE '${cpf}%';`;
+    }
+    const result = await connection.query(query);
     return res.status(200).send(result.rows);
   } catch (err) {
     return res.status(500).send(err);

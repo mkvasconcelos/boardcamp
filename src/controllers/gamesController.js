@@ -13,9 +13,14 @@ export async function gamesCreate(_, res) {
   }
 }
 
-export async function gamesRead(_, res) {
+export async function gamesRead(req, res) {
+  const { name } = req.query;
   try {
-    const result = await connection.query(`SELECT * FROM games;`);
+    let query = `SELECT * FROM games;`;
+    if (name) {
+      query = `SELECT * FROM games WHERE name ILIKE '${name}%';`;
+    }
+    const result = await connection.query(query);
     return res.status(200).send(result.rows);
   } catch (err) {
     return res.status(500).send(err);
