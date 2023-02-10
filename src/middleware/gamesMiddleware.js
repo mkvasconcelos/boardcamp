@@ -39,7 +39,7 @@ export async function gamesStockValidation(_, res, next) {
       `SELECT COUNT(*) FROM rentals WHERE "gameId" = ${gameId} AND "returnDate" IS NULL;`
     );
     if (Number(gamesRented.rows[0].count) === game.stockTotal) {
-      return res.sendStatus(404);
+      return res.sendStatus(400);
     }
     next();
   } catch (err) {

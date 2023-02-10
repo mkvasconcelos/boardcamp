@@ -56,3 +56,27 @@ export async function rentalsCreate(_, res) {
     return res.status(500).send(err);
   }
 }
+
+export async function rentalsFinish(_, res) {
+  const { id, delayFee, daysRented, rentDate, gameId } = res.locals;
+  let newDelayFee = delayFee;
+  const newReturnDate = new Date(new Date().setHours(0, 0, 0, 0));
+  const deltaTime =
+    (newReturnDate.getTime() - rentDate.getTime()) / (1000 * 60 * 60 * 24);
+  if (deltaTime > daysRented) {
+    const result = await connection.query(
+      `SELECT "pricePerDay" FROM games WHERE id = ${gameId};`
+    );
+    const pricePerDay = result.rows[0].pricePerDay;
+    newDelayFee = (deltaTime - daysRented) * pricePerDay;
+  }
+  try {
+    await connection.query(
+      `UPDATE rentals SET "returnDate" = $1, "delayFee" = $2 WHERE id = ${id};`,
+      [newReturnDate, newDelayFee]
+    );
+    return res.sendStatus(200);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+}
