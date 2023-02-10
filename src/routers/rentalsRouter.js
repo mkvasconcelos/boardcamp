@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   rentalsCreate,
+  rentalsDelete,
   rentalsFinish,
   rentalsRead,
 } from "../controllers/rentalsController.js";
@@ -9,7 +10,11 @@ import {
   gamesIdValidation,
   gamesStockValidation,
 } from "../middleware/gamesMiddleware.js";
-import { rentalsIdValidation } from "../middleware/rentalsMiddleware.js";
+import {
+  rentalsFinishedValidation,
+  rentalsIdValidation,
+  rentalsReturnedValidation,
+} from "../middleware/rentalsMiddleware.js";
 import { rentalsValidation } from "../middleware/schemaMiddleware.js";
 
 const rentalsRouter = Router();
@@ -22,21 +27,17 @@ rentalsRouter.post(
   customersIdValidation,
   rentalsCreate
 );
-rentalsRouter.post("/rentals/:id/return", rentalsIdValidation, rentalsFinish);
-
-// rentalsRouter.post(
-//   "/customers",
-//   customersValidation,
-//   customersDocumentValidation,
-//   customersCreate
-// );
-// rentalsRouter.put(
-//   "/customers/:id",
-//   customersValidation,
-//   customersDocumentValidation,
-//   customersUpdate
-// );
-
-// rentalsRouter.get("/customers/:id", customersReadId);
+rentalsRouter.post(
+  "/rentals/:id/return",
+  rentalsIdValidation,
+  rentalsReturnedValidation,
+  rentalsFinish
+);
+rentalsRouter.delete(
+  "/rentals/:id",
+  rentalsIdValidation,
+  rentalsFinishedValidation,
+  rentalsDelete
+);
 
 export default rentalsRouter;
