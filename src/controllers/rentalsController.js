@@ -80,3 +80,13 @@ export async function rentalsFinish(_, res) {
     return res.status(500).send(err);
   }
 }
+
+export async function rentalsDelete(_, res) {
+  const { id } = res.locals;
+  try {
+    await connection.query(`DELETE FROM rentals WHERE id = ${id};`);
+    return res.sendStatus(200);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+}
