@@ -9,17 +9,9 @@ export async function rentalsRead(req, res) {
     INNER JOIN games ON games.id = rentals."gameId"
     INNER JOIN customers ON customers.id = rentals."customerId"`;
     if (customerId) {
-      query = `SELECT rentals.*, games.name AS "gameName", customers.name AS "customerName" 
-      FROM rentals 
-      WHERE "customerId" = ${Number(customerId)}
-      INNER JOIN games ON games.id = rentals."gameId"
-      INNER JOIN customers ON customers.id = rentals."customerId"`;
+      query = ` WHERE "customerId" = ${Number(customerId)}`;
     } else if (gameId) {
-      query = `SELECT rentals.*, games.name AS "gameName", customers.name AS "customerName" 
-      FROM rentals
-      WHERE "gameId" = ${gameId}
-      INNER JOIN games ON games.id = rentals."gameId"
-      INNER JOIN customers ON customers.id = rentals."customerId"`;
+      query += ` WHERE "gameId" = ${gameId}`;
     }
     if (order) {
       query += ` ORDER BY "${order}"`;

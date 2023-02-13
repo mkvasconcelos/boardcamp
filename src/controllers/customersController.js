@@ -42,7 +42,7 @@ export async function customersRead(req, res) {
       query += ` WHERE cpf LIKE '${cpf}%'`;
     }
     if (order) {
-      query += ` ORDER BY ${order}`;
+      query += ` ORDER BY "${order}"`;
     }
     if (desc) {
       query += ` DESC`;
