@@ -23,7 +23,7 @@ export async function rentalsRead(req, res) {
       if (query.includes("WHERE")) {
         query += ` AND "rentDate" >= '${startDate}'`;
       } else {
-        query += ` Where "rentDate" >= '${startDate}'`;
+        query += ` WHERE "rentDate" >= '${startDate}'`;
       }
     }
     if (status) {
