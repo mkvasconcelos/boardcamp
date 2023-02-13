@@ -35,7 +35,7 @@ export async function customersUpdate(req, res) {
 }
 
 export async function customersRead(req, res) {
-  const { cpf, order, desc, offset } = req.query;
+  const { cpf, order, desc, offset, limit } = req.query;
   try {
     let query = `SELECT * FROM customers`;
     if (cpf) {
@@ -46,6 +46,9 @@ export async function customersRead(req, res) {
     }
     if (desc) {
       query += ` DESC`;
+    }
+    if (limit) {
+      query += ` LIMIT ${limit}`;
     }
     if (offset) {
       query += ` OFFSET ${offset}`;

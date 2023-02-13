@@ -2,7 +2,8 @@ import connection from "../database/database.js";
 import dayjs from "dayjs";
 
 export async function rentalsRead(req, res) {
-  const { customerId, gameId, order, desc, offset, limit } = req.query;
+  const { customerId, gameId, order, desc, offset, limit, status, startDate } =
+    req.query;
   try {
     let query = `SELECT rentals.*, games.name AS "gameName", customers.name AS "customerName" 
     FROM rentals 
@@ -10,8 +11,35 @@ export async function rentalsRead(req, res) {
     INNER JOIN customers ON customers.id = rentals."customerId"`;
     if (customerId) {
       query += ` WHERE "customerId" = ${Number(customerId)}`;
-    } else if (gameId) {
-      query += ` WHERE "gameId" = ${gameId}`;
+    }
+    if (gameId) {
+      if (query.includes("WHERE")) {
+        query += ` AND "gameId" = ${gameId}`;
+      } else {
+        query += ` WHERE "gameId" = ${gameId}`;
+      }
+    }
+    if (startDate) {
+      if (query.includes("WHERE")) {
+        query += ` AND "rentDate" >= '${startDate}'`;
+      } else {
+        query += ` Where "rentDate" >= '${startDate}'`;
+      }
+    }
+    if (status) {
+      if (status === "open") {
+        if (query.includes("WHERE")) {
+          query += ` AND "returnDate" IS NULL`;
+        } else {
+          query += ` WHERE "returnDate" IS NULL`;
+        }
+      } else if (status === "closed") {
+        if (query.includes("WHERE")) {
+          query += ` AND "returnDate" IS NOT NULL`;
+        } else {
+          query += ` WHERE "returnDate" IS NOT NULL`;
+        }
+      }
     }
     if (order) {
       query += ` ORDER BY "${order}"`;
