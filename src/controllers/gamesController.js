@@ -14,13 +14,19 @@ export async function gamesCreate(_, res) {
 }
 
 export async function gamesRead(req, res) {
-  const { name } = req.query;
+  const { name, order, desc } = req.query;
   try {
-    let query = `SELECT * FROM games;`;
+    let query = `SELECT * FROM games`;
     if (name) {
-      query = `SELECT * FROM games WHERE name ILIKE '${name}%';`;
+      query += ` WHERE name ILIKE '${name}%';`;
     }
-    const result = await connection.query(query);
+    if (order) {
+      query += ` ORDER BY ${order}`;
+    }
+    if (desc) {
+      query += ` DESC`;
+    }
+    const result = await connection.query(query + ";");
     return res.status(200).send(result.rows);
   } catch (err) {
     return res.status(500).send(err);

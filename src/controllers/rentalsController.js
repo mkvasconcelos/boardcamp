@@ -2,30 +2,24 @@ import connection from "../database/database.js";
 import dayjs from "dayjs";
 
 export async function rentalsRead(req, res) {
-  const { customerId } = req.query;
-  const { gameId } = req.query;
-  console.log(customerId, gameId);
+  const { customerId, gameId, order, desc } = req.query;
   try {
     let query = `SELECT rentals.*, games.name AS "gameName", customers.name AS "customerName" 
     FROM rentals 
     INNER JOIN games ON games.id = rentals."gameId"
-    INNER JOIN customers ON customers.id = rentals."customerId";`;
+    INNER JOIN customers ON customers.id = rentals."customerId"`;
     if (customerId) {
-      console.log(customerId);
-      query = `SELECT rentals.*, games.name AS "gameName", customers.name AS "customerName" 
-    FROM rentals 
-    INNER JOIN games ON games.id = rentals."gameId"
-    INNER JOIN customers ON customers.id = rentals."customerId"
-    WHERE "customerId" = ${Number(customerId)};`;
+      query = ` WHERE "customerId" = ${Number(customerId)}`;
     } else if (gameId) {
-      console.log(gameId);
-      query = `SELECT rentals.*, games.name AS "gameName", customers.name AS "customerName" 
-    FROM rentals 
-    INNER JOIN games ON games.id = rentals."gameId"
-    INNER JOIN customers ON customers.id = rentals."customerId"
-    WHERE "gameId" = ${gameId};`;
+      query = ` WHERE "gameId" = ${gameId}`;
     }
-    const result = await connection.query(query);
+    if (order) {
+      query += ` ORDER BY ${order}`;
+    }
+    if (desc) {
+      query += ` DESC`;
+    }
+    const result = await connection.query(query + ";");
     let answer = [];
     for (let i = 0; i < result.rows.length; i++) {
       answer.push({

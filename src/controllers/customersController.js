@@ -35,13 +35,19 @@ export async function customersUpdate(req, res) {
 }
 
 export async function customersRead(req, res) {
-  const { cpf } = req.query;
+  const { cpf, order, desc } = req.query;
   try {
-    let query = `SELECT * FROM customers;`;
+    let query = `SELECT * FROM customers`;
     if (cpf) {
-      query = `SELECT * FROM customers WHERE cpf LIKE '${cpf}%';`;
+      query += ` WHERE cpf LIKE '${cpf}%'`;
     }
-    const result = await connection.query(query);
+    if (order) {
+      query += ` ORDER BY ${order}`;
+    }
+    if (desc) {
+      query += ` DESC`;
+    }
+    const result = await connection.query(query + ";");
     return res.status(200).send(result.rows);
   } catch (err) {
     return res.status(500).send(err);
