@@ -21,7 +21,7 @@ export async function gamesRead(req, res) {
       query += ` WHERE name ILIKE '${name}%';`;
     }
     if (order) {
-      query += ` ORDER BY ${order}`;
+      query += ` ORDER BY "${order}"`;
     }
     if (desc) {
       query += ` DESC`;
