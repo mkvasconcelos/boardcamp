@@ -2,14 +2,14 @@ import connection from "../database/database.js";
 import dayjs from "dayjs";
 
 export async function rentalsRead(req, res) {
-  const { customerId, gameId, order, desc } = req.query;
+  const { customerId, gameId, order, desc, offset, limit } = req.query;
   try {
     let query = `SELECT rentals.*, games.name AS "gameName", customers.name AS "customerName" 
     FROM rentals 
     INNER JOIN games ON games.id = rentals."gameId"
     INNER JOIN customers ON customers.id = rentals."customerId"`;
     if (customerId) {
-      query = ` WHERE "customerId" = ${Number(customerId)}`;
+      query += ` WHERE "customerId" = ${Number(customerId)}`;
     } else if (gameId) {
       query += ` WHERE "gameId" = ${gameId}`;
     }
@@ -18,6 +18,12 @@ export async function rentalsRead(req, res) {
     }
     if (desc) {
       query += ` DESC`;
+    }
+    if (limit) {
+      query += ` LIMIT ${limit}`;
+    }
+    if (offset) {
+      query += ` OFFSET ${offset}`;
     }
     const result = await connection.query(query + ";");
     let answer = [];

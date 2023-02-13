@@ -14,7 +14,7 @@ export async function gamesCreate(_, res) {
 }
 
 export async function gamesRead(req, res) {
-  const { name, order, desc } = req.query;
+  const { name, order, desc, offset, limit } = req.query;
   try {
     let query = `SELECT * FROM games`;
     if (name) {
@@ -25,6 +25,12 @@ export async function gamesRead(req, res) {
     }
     if (desc) {
       query += ` DESC`;
+    }
+    if (limit) {
+      query += ` LIMIT ${limit}`;
+    }
+    if (offset) {
+      query += ` OFFSET ${offset}`;
     }
     const result = await connection.query(query + ";");
     return res.status(200).send(result.rows);
